@@ -18,8 +18,11 @@ package com.android.example.wordlistsql;
 
 import android.app.Activity;
 import android.content.Context;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,10 +82,25 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
         holder.delete_button.setOnClickListener(new MyButtonOnClickListener(current.getmId(),null){
             @Override
             public void onClick(View v){
-                int deleted = mDB.delete(id);
-                if(deleted>=0){
-                    notifyItemRemoved(holder.getAdapterPosition());
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setTitle("CONFIRM DELETE?");
+                builder.setMessage("Are you sure you want to delete?");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        int deleted = mDB.delete(id);
+                        if(deleted>=0){
+                            notifyItemRemoved(holder.getAdapterPosition());
+                        }
+                    }
+                });
+                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                builder.show();
             }
         });
 
